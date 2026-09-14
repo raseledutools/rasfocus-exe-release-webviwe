@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -27,6 +30,7 @@ jobs:
         run: npm install
 
       - name: Build Tauri app
+        id: build
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -36,3 +40,93 @@ jobs:
           releaseBody: "Automated release of RasFocus Tauri rewrite."
           releaseDraft: false
           prerelease: false
+
+      - name: Collect and upload error log on failure
+        if: failure()
+        shell: pwsh
+        run: |
+          $timestamp  = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
+          $logFile    = "build_error_$timestamp.txt"
+          $runUrl     = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          $header = @"
+          ============================================================
+          BUILD FAILURE LOG
+          ============================================================
+          Repository : ${{ github.repository }}
+          Branch     : ${{ github.ref_name }}
+          Commit SHA : ${{ github.sha }}
+          Run ID     : ${{ github.run_id }}
+          Run URL    : $runUrl
+          Triggered  : ${{ github.event_name }}
+          Runner OS  : ${{ runner.os }}
+          Timestamp  : $timestamp
+          ============================================================
+
+          "@
+
+          # Collect npm install log if present
+          $npmLog = ""
+          if (Test-Path "npm-debug.log") {
+            $npmLog = "`n--- npm-debug.log ---`n" + (Get-Content "npm-debug.log" -Raw)
+          }
+
+          # Collect Cargo / Rust build log
+          $cargoLog = ""
+          $cargoLogPath = "src-tauri/target/debug/build"
+          if (Test-Path $cargoLogPath) {
+            $cargoLog = "`n--- Cargo build output (stderr logs) ---`n"
+            Get-ChildItem -Path $cargoLogPath -Filter "stderr" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+              $cargoLog += "`n[" + $_.FullName + "]`n" + (Get-Content $_.FullName -Raw)
+            }
+          }
+
+          # Collect tauri-action logs from runner temp
+          $tauriLog = ""
+          if (Test-Path "$env:RUNNER_TEMP") {
+            $tauriLogs = Get-ChildItem -Path "$env:RUNNER_TEMP" -Filter "*.log" -Recurse -ErrorAction SilentlyContinue
+            foreach ($f in $tauriLogs) {
+              $tauriLog += "`n--- $($f.FullName) ---`n" + (Get-Content $f.FullName -Raw)
+            }
+          }
+
+          $body = @"
+          GITHUB ACTIONS STEP SUMMARY
+          ----------------------------
+          Step: Build Tauri app
+          Result: FAILED
+
+          Please visit the full run log at:
+          $runUrl
+
+          $npmLog
+          $cargoLog
+          $tauriLog
+          "@
+
+          $fullLog = $header + $body
+          Set-Content -Path $logFile -Value $fullLog -Encoding UTF8
+
+          echo "Log file created: $logFile"
+          Get-Content $logFile
+
+      - name: Push error log to repo root
+        if: failure()
+        shell: pwsh
+        run: |
+          $logFile = Get-ChildItem -Filter "build_error_*.txt" | Select-Object -First 1
+
+          if ($logFile) {
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            git pull --rebase origin ${{ github.ref_name }} 2>$null || true
+            git add $logFile.Name
+            git commit -m "ci: upload build error log $($logFile.Name) [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+
+            echo "Error log pushed: $($logFile.Name)"
+          } else {
+            echo "No error log file found to push."
+          }
+
