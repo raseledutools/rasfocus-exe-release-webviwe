@@ -1,186 +1,38 @@
-name: Build RasFocus (MSVC)
+name: Release Tauri App
 
 on:
   push:
     branches: [ "main", "master" ]
-    paths-ignore:
-      - 'log_error.txt'
-  pull_request:
-    branches: [ "main", "master" ]
-    paths-ignore:
-      - 'log_error.txt'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: windows-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        persist-credentials: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup MSVC Compiler Environment
-      uses: ilammy/msvc-dev-cmd@v1
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    # ── Version: v1.0.<run_number> → main.cpp এ CURRENT_VERSION replace ──
-    - name: Bump version in main.cpp
-      shell: pwsh
-      run: |
-        $ver = "v1.0.${{ github.run_number }}"
-        Write-Host "Setting version: $ver"
-        $content = Get-Content main.cpp -Raw
-        $content = $content -replace 'const string CURRENT_VERSION = "v[^"]*"', "const string CURRENT_VERSION = `"$ver`""
-        Set-Content main.cpp $content -Encoding UTF8
-        Write-Host "Version set to $ver in main.cpp"
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
 
-    # 🟢 1. WebView2 Caching
-    - name: Cache WebView2 SDK
-      id: cache-webview2
-      uses: actions/cache@v4
-      with:
-        path: packages
-        key: webview2-1.0.2420.47
+      - name: Install dependencies
+        run: npm install
 
-    - name: Install WebView2 SDK via NuGet
-      if: steps.cache-webview2.outputs.cache-hit != 'true'
-      run: nuget install Microsoft.Web.WebView2 -Version 1.0.2420.47 -OutputDirectory packages
-
-    # 🟢 2. Firebase SDK Caching
-    - name: Cache Firebase SDK
-      id: cache-firebase
-      uses: actions/cache@v4
-      with:
-        path: firebase_cpp_sdk
-        key: firebase-cpp-sdk-12.4.0
-
-    - name: Download and Setup Firebase C++ SDK
-      if: steps.cache-firebase.outputs.cache-hit != 'true'
-      run: |
-        curl -L https://dl.google.com/firebase/sdk/cpp/firebase_cpp_sdk_12.4.0.zip -o firebase.zip
-        powershell Expand-Archive -Path firebase.zip -DestinationPath . -Force
-        del firebase.zip
-
-    - name: Compile Resources
-      run: rc.exe resources.rc
-
-    - name: Compile RasFocus.exe
-      id: compile
-      shell: pwsh
-      run: |
-        $libPath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_app.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -match "MT" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        if (!$libPath) {
-            $libPath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_app.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        }
-        $firestorePath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_firestore.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -match "MT" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        if (!$firestorePath) {
-            $firestorePath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_firestore.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        }
-        $authPath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_auth.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -match "MT" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        if (!$authPath) {
-            $authPath = (Get-ChildItem -Path .\firebase_cpp_sdk\libs -Filter firebase_auth.lib -Recurse | Where-Object { $_.FullName -match "x64" -and $_.FullName -notmatch "Debug" }).FullName | Select-Object -First 1
-        }
-
-        Write-Host "firebase_app.lib       -> $libPath"
-        Write-Host "firebase_firestore.lib -> $firestorePath"
-        Write-Host "firebase_auth.lib      -> $authPath"
-
-        cl.exe /MP /EHsc /std:c++17 /MT /O2 /GL /utf-8 /W3 main.cpp prewindow.cpp tab_dashboard.cpp tab_family_link.cpp browser/advanced_feature.cpp browser/feature_browser.cpp browser/bookmarks.cpp browser/context_menu.cpp browser/downloads_panel.cpp browser/find_in_page.cpp browser/history_panel.cpp browser/settings.cpp browser/keyboard_shortcuts.cpp browser/browser_profiles.cpp pdf_reader/tab_pdf_workspace.cpp upgrade.cpp browser/mini_browser.cpp tab_blocks.cpp tab_schedule_blocks.cpp tab_adult.cpp tab_deep_study.cpp tab_special.cpp tab_file_manager.cpp tab_statistics.cpp tab_settings.cpp tab_utilities.cpp tab_device_block.cpp tab_diary.cpp accounts.cpp tab_phone_remote.cpp tab_phone_remote_relay.cpp pc_screen_streamer.cpp tab_rasgram.cpp rasgram_net.cpp rasgram_qr_session.cpp qrcodegen.cpp resources.res /I"./packages/Microsoft.Web.WebView2.1.0.2420.47/build/native/include" /I"./firebase_cpp_sdk/include" /link /LTCG /OPT:REF /OPT:ICF /SUBSYSTEM:WINDOWS /OUT:RasFocus.exe user32.lib gdi32.lib gdiplus.lib comctl32.lib ole32.lib oleaut32.lib uiautomationcore.lib uuid.lib psapi.lib shlwapi.lib winmm.lib shell32.lib urlmon.lib wininet.lib comdlg32.lib advapi32.lib crypt32.lib ws2_32.lib mfplat.lib mfuuid.lib mf.lib mfreadwrite.lib wmcodecdspuuid.lib rpcrt4.lib secur32.lib bcrypt.lib dbghelp.lib "./packages/Microsoft.Web.WebView2.1.0.2420.47/build/native/x64/WebView2LoaderStatic.lib" "$libPath" "$firestorePath" "$authPath" 2>&1 | Tee-Object -FilePath build_log.txt
-
-        $exitCode = $LASTEXITCODE
-        echo "BUILD_EXIT_CODE=$exitCode" >> $env:GITHUB_OUTPUT
-
-    - name: Write log_error.txt and push to repo
-      if: always()
-      shell: pwsh
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        $exitCode = "${{ steps.compile.outputs.BUILD_EXIT_CODE }}"
-        $logContent = Get-Content build_log.txt -Raw -ErrorAction SilentlyContinue
-        $timestamp = (Get-Date -Format "yyyy-MM-dd HH:mm:ss UTC")
-        $runUrl = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        if ($exitCode -eq "0") {
-            $header = "BUILD STATUS: SUCCESS`nTime: $timestamp`nRun: $runUrl`n`n=== Compiler Output ===`n"
-        } else {
-            $header = "BUILD STATUS: FAILED (exit code $exitCode)`nTime: $timestamp`nRun: $runUrl`n`n=== Compiler Output ===`n"
-        }
-        $fullLog = $header + $logContent
-        Set-Content -Path log_error.txt -Value $fullLog -Encoding UTF8
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git config user.name "github-actions[bot]"
-        git add log_error.txt
-        git diff --cached --quiet && echo "No change in log" || git commit -m "ci: update log_error.txt [skip ci]"
-        git push origin HEAD:main
-
-    - name: Fail job if compile failed
-      if: steps.compile.outputs.BUILD_EXIT_CODE != '0'
-      run: exit 1
-
-    - name: Sign RasFocus.exe
-      continue-on-error: true
-      shell: pwsh
-      run: |
-        # Multiple TSA URLs — DigiCert HTTP endpoint often times out from GH Actions runners.
-        # Try each in order; break on first success.
-        $tsaUrls = @(
-          "http://timestamp.digicert.com",
-          "http://timestamp.sectigo.com",
-          "http://timestamp.globalsign.com/scripts/timstamp.dll"
-        )
-        $signed = $false
-        foreach ($tsa in $tsaUrls) {
-          Write-Host "Trying TSA: $tsa"
-          $result = & signtool sign /f "RasAppsCert.pfx" /p "1234" /t $tsa /fd SHA256 "RasFocus.exe" 2>&1
-          Write-Host $result
-          if ($LASTEXITCODE -eq 0) { $signed = $true; Write-Host "Signed OK with $tsa"; break }
-          Write-Host "TSA $tsa failed, trying next..."
-          Start-Sleep -Seconds 3
-        }
-        if (-not $signed) {
-          Write-Host "WARNING: All TSA servers failed — EXE will be released unsigned."
-        }
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: RasFocus-App-Signed
-        path: RasFocus.exe
-
-    # ── version.txt: raw.githubusercontent থেকে পড়ার জন্য — no API rate-limit ──
-    - name: Commit version.txt to repo
-      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-      shell: pwsh
-      run: |
-        $ver = "v1.0.${{ github.run_number }}"
-        Set-Content version.txt $ver -Encoding UTF8 -NoNewline
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add version.txt
-        git diff --cached --quiet || git commit -m "ci: bump version.txt to $ver [skip ci]"
-        git push origin HEAD:main
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # ── Release: tag = v1.0.<run_number>, name readable ──
-    - name: Create GitHub Release with EXE
-      if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: v1.0.${{ github.run_number }}
-        name: "RasFocus v1.0.${{ github.run_number }}"
-        body: |
-          ## RasFocus v1.0.${{ github.run_number }}
-          Auto-release from build #${{ github.run_number }}
-          
-          **Install:** Download `RasFocus.exe` and run it. The app will replace itself automatically.
-        files: RasFocus.exe
-        make_latest: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: "RasFocus v__VERSION__"
+          releaseBody: "Automated release of RasFocus Tauri rewrite."
+          releaseDraft: false
+          prerelease: false

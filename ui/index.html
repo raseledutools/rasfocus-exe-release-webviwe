@@ -132,8 +132,8 @@
                             <h2 class="section-title">Quick Blocks</h2>
                             <div class="btn-grid">
                                 <button class="dash-btn"><i class="ri-cup-line"></i><span>Rest Button</span></button>
-                                <button class="dash-btn"><i class="ri-wifi-off-line"></i><span>Internet Block</span></button>
-                                <button class="dash-btn"><i class="ri-uninstall-line"></i><span>Uninstall Block</span></button>
+                                <button class="dash-btn" onclick="quickBlock('toggle_internet')"><i class="ri-wifi-off-line"></i><span>Internet Block</span></button>
+                                <button class="dash-btn" onclick="quickBlock('toggle_install')"><i class="ri-uninstall-line"></i><span>Uninstall Block</span></button>
                                 <button class="dash-btn"><i class="ri-spam-2-line"></i><span>Ads Block</span></button>
                                 <button class="dash-btn"><i class="ri-video-chat-line"></i><span>YT Shorts Block</span></button>
                                 <button class="dash-btn"><i class="ri-instagram-line"></i><span>FB Reels Block</span></button>
@@ -400,14 +400,14 @@
                                     <h4>Require Password</h4>
                                     <p>Ask for PIN to close or modify settings.</p>
                                 </div>
-                                <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+                                <label class="switch"><input type="checkbox" onchange="setupToggle(this, 'require_password')"><span class="slider round"></span></label>
                             </div>
                             <div class="block-item">
                                 <div class="block-info">
                                     <h4>Block Task Manager</h4>
                                     <p>Prevent closing RasFocus via Task Manager.</p>
                                 </div>
-                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                                <label class="switch"><input type="checkbox" checked onchange="setupToggle(this, 'kill_debug_apps')"><span class="slider round"></span></label>
                             </div>
                         </div>
                         <div class="dash-section glass-card">
@@ -417,14 +417,14 @@
                                     <h4>Start with Windows</h4>
                                     <p>Launch RasFocus automatically on boot.</p>
                                 </div>
-                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                                <label class="switch"><input type="checkbox" checked onchange="setupToggle(this, 'start_with_windows')"><span class="slider round"></span></label>
                             </div>
                             <div class="block-item">
                                 <div class="block-info">
                                     <h4>Dark Theme</h4>
                                     <p>Force dark mode across all interfaces.</p>
                                 </div>
-                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                                <label class="switch"><input type="checkbox" checked onchange="setupToggle(this, 'dark_theme')"><span class="slider round"></span></label>
                             </div>
                         </div>
                     </div>
@@ -572,6 +572,8 @@
     <script>
         const { invoke } = window.__TAURI__.tauri;
     </script>
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,14 @@
+{
+  "name": "rasfocus",
+  "version": "1.0.6",
+  "description": "RasFocus Desktop Application",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.3"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.11"
+  }
+}

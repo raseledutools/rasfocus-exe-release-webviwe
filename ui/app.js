@@ -59,28 +59,28 @@ async function initializeBackend() {
 function handleMockCommand(command, args) {
     switch (command) {
         case 'toggle_adult_filter':
-            alert('Adult filter toggled (Mock)');
+            showToast('Adult filter toggled', 'success');
             return true;
         case 'kill_debug_apps':
-            alert('Killed debug apps like Taskmgr (Mock)');
+            showToast('Killed debug apps like Taskmgr', 'success');
             return true;
         case 'toggle_internet':
-            alert(`Internet Block set to: ${args} (Mock)`);
+            showToast(`Internet Block set to: ${args}`, 'success');
             return true;
         case 'toggle_install':
-            alert(`Install Block set to: ${args} (Mock)`);
+            showToast(`Install Block set to: ${args}`, 'success');
             return true;
         case 'toggle_audio':
-            alert(`Ambient Noise set to: ${args} (Mock)`);
+            showToast(`Ambient Noise set to: ${args}`, 'success');
             return true;
         case 'connect_parent':
-            alert('Connecting to Parent Device... (Mock)');
+            showToast('Connecting to Parent Device...', 'success');
             return true;
         case 'open_pdf_reader':
-            alert('Opening PDF Reader... (Mock)');
+            showToast('Opening PDF Reader...', 'success');
             return true;
         case 'connect_remote':
-            alert('Connecting to Remote Device... (Mock)');
+            showToast('Connecting to Remote Device...', 'success');
             return true;
         case 'get_user_info':
             return { name: 'Admin', isPremium: true };
@@ -169,5 +169,51 @@ function updateDsDisplay() {
     } else {
         statusEl.innerText = Break Time!;
         timeEl.style.color = 'var(--accent-secondary)';
+    }
+}
+
+// Phase 9: Toast Notifications
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icon = type === 'success' ? 'ri-checkbox-circle-fill' : 'ri-error-warning-fill';
+    toast.innerHTML = `<i class="${icon}"></i><span>${message}</span>`;
+    
+    container.appendChild(toast);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Phase 9: Backend Binding Functions
+async function setupToggle(checkbox, commandName) {
+    try {
+        await invokeRust(commandName, { enable: checkbox.checked });
+        showToast(`${commandName} updated successfully`, 'success');
+    } catch (e) {
+        showToast(`Failed to update ${commandName}`, 'error');
+        checkbox.checked = !checkbox.checked; // revert
+    }
+}
+
+async function quickBlock(commandName) {
+    try {
+        // Quick blocks usually enable a block feature
+        await invokeRust(commandName, { enable: true });
+        showToast(`${commandName} activated!`, 'success');
+    } catch (e) {
+        showToast(`Failed to activate ${commandName}`, 'error');
     }
 }
