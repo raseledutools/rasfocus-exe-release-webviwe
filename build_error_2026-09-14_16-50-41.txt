@@ -1,0 +1,23 @@
+============================================================
+BUILD FAILURE LOG
+============================================================
+Repository : raseledutools/rasfocus-exe-release-webviwe
+Branch     : main
+Commit SHA : 19759513aca3f63a33394c4d16fec9cf0ece8c13
+Run ID     : 34870544509
+Run URL    : https://github.com/raseledutools/rasfocus-exe-release-webviwe/actions/runs/34870544509
+Triggered  : push
+Runner OS  : Windows
+Timestamp  : 2026-09-14_16-50-41
+============================================================
+GITHUB ACTIONS STEP SUMMARY
+----------------------------
+Step: Build Tauri app
+Result: FAILED
+
+Please visit the full run log at:
+https://github.com/raseledutools/rasfocus-exe-release-webviwe/actions/runs/34870544509
+
+
+
+
