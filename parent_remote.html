@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RasFocus Family Link - Parent Control</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #00838f;
+  }
+  .header p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 16px;
+    font-weight: 600;
+    border-left: 3px solid #00838f;
+    padding-left: 10px;
+  }
+  /* PIN Generator */
+  .pin-display {
+    background: #f0f9ff;
+    border: 2px dashed #00838f;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .pin-display .pin {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    color: #00838f;
+    font-family: monospace;
+  }
+  .pin-display .pin-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
+  .pin-timer {
+    font-size: 13px;
+    color: #e65100;
+    text-align: center;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  /* Buttons */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: #00838f; color: white; }
+  .btn-primary:hover { background: #006064; }
+  .btn-secondary { background: #e8f5e9; color: #2e7d32; margin-top: 8px; }
+  .btn-secondary:hover { background: #c8e6c9; }
+  /* Toggle Controls */
+  .control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .control-row:last-child { border-bottom: none; }
+  .control-info .label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+  }
+  .control-info .desc {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+  }
+  /* Toggle Switch */
+  .toggle { position: relative; width: 52px; height: 28px; }
+  .toggle input { display: none; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 28px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .toggle-slider:before {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle input:checked + .toggle-slider { background: #00838f; }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(24px); }
+  /* Status */
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .badge-connected { background: #e8f5e9; color: #2e7d32; }
+  .badge-disconnected { background: #fce4ec; color: #c62828; }
+  /* Device ID */
+  .device-box {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .device-id {
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+  }
+  .device-status { font-size: 12px; color: #888; }
+  /* Input */
+  input[type=text], input[type=number] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 10px;
+  }
+  input:focus { border-color: #00838f; }
+  .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+    display: none;
+  }
+  .alert-success { background: #e8f5e9; color: #2e7d32; display: block; }
+  .alert-error { background: #fce4ec; color: #c62828; display: block; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #00838f;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .not-connected-msg {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    padding: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔗 RasFocus Family Link</h1>
+  <p>Parent Remote Control Panel</p>
+</div>
+
+<!-- Step 1: Firebase Config -->
+<div class="card" id="configCard">
+  <h2>🔧 Firebase Setup</h2>
+  <p style="font-size:13px;color:#666;margin-bottom:12px;">
+    নিচের field গুলো apnar Firebase project er config দিয়ে fill করুন।
+    এটা একবারই করতে হবে।
+  </p>
+  <input type="text" id="projectId" placeholder="Firebase Project ID (e.g. rasfocus-c746d)" value="rasfocus-c746d">
+  <input type="text" id="apiKey" placeholder="Firebase Web API Key">
+  <input type="text" id="parentUid" placeholder="আপনার Firebase User UID (parent)">
+  <button class="btn btn-primary" onclick="saveConfig()">✅ Save & Continue</button>
+  <div id="configAlert" class="alert"></div>
+</div>
+
+<!-- Step 2: Generate PIN -->
+<div class="card" id="pinCard" style="display:none">
+  <h2>📱 Connection Code</h2>
+  <p style="font-size:13px;color:#888;margin-bottom:16px;">
+    এই 6-digit code টি বাচ্চার PC তে RasFocus app এ দিলে device টি connect হবে।
+  </p>
+  <div class="pin-display">
+    <div class="pin" id="pinDisplay">------</div>
+    <div class="pin-label">PC তে এই code দিন</div>
+  </div>
+  <div class="pin-timer" id="pinTimer"></div>
+  <button class="btn btn-primary" onclick="generatePin()">🔄 Generate New Code</button>
+</div>
+
+<!-- Step 3: Connected Devices -->
+<div class="card" id="devicesCard" style="display:none">
+  <h2>💻 Connected Devices</h2>
+  <div id="devicesList">
+    <div class="not-connected-msg">No devices connected yet.<br>Generate a code and enter it on the child's PC.</div>
+  </div>
+  <button class="btn btn-secondary" onclick="refreshDevices()">🔁 Refresh Devices</button>
+</div>
+
+<!-- Step 4: Remote Controls -->
+<div class="card" id="controlsCard" style="display:none">
+  <h2>🎮 Remote Controls</h2>
+  <p style="font-size:12px;color:#888;margin-bottom:14px;">
+    নিচের controls গুলো সাথে সাথেই বাচ্চার PC তে apply হবে (5 min এর মধ্যে)।
+  </p>
+
+  <div class="control-row">
+    <div class="control-info">
+      <div class="label">🔒 Lock All Tabs</div>
+      <div class="desc">সব app ও browser বন্ধ করে দেবে</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="toggle_lock" onchange="sendCommand('lock_all_tabs', this.checked)">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="control-row">
+    <div class="control-info">
+      <div class="label">🔞 Force Adult Block</div>
+      <div class="desc">সব adult ও inappropriate site block হবে</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="toggle_adult" onchange="sendCommand('force_adult_block', this.checked)">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="control-row">
+    <div class="control-info">
+      <div class="label">⏱️ Time Limit</div>
+      <div class="desc">নির্দিষ্ট সময় পর app/browser বন্ধ হবে</div>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="toggle_time" onchange="toggleTimeLimit(this.checked)">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div id="timeLimitInput" style="display:none; padding: 10px 0;">
+    <input type="number" id="timeLimitMins" placeholder="কত মিনিট? (e.g. 30)" min="1" max="480" style="margin-bottom:6px;">
+    <button class="btn btn-secondary" onclick="applyTimeLimit()">⏳ Apply Time Limit</button>
+  </div>
+
+  <div id="commandStatus" class="alert" style="margin-top:12px;"></div>
+</div>
+
+<!-- Status Footer -->
+<div style="text-align:center; font-size:12px; color:#aaa; margin-top:8px;">
+  RasFocus Family Link v1.0 • Powered by Firebase
+</div>
+
+<script>
+// ── Config ──
+let CONFIG = {
+  projectId: '',
+  apiKey: '',
+  parentUid: '',
+  idToken: '' // anonymous auth token
+};
+
+let selectedDeviceId = ''; // linked child device hardware ID
+
+function saveConfig() {
+  CONFIG.projectId = document.getElementById('projectId').value.trim();
+  CONFIG.apiKey = document.getElementById('apiKey').value.trim();
+  CONFIG.parentUid = document.getElementById('parentUid').value.trim();
+
+  if (!CONFIG.projectId || !CONFIG.apiKey || !CONFIG.parentUid) {
+    showAlert('configAlert', 'error', 'সব field fill করুন!');
+    return;
+  }
+
+  localStorage.setItem('rf_config', JSON.stringify(CONFIG));
+  showAlert('configAlert', 'success', 'Config saved! ✅ নিচে PIN generate করুন।');
+
+  document.getElementById('pinCard').style.display = 'block';
+  document.getElementById('devicesCard').style.display = 'block';
+  document.getElementById('controlsCard').style.display = 'block';
+
+  refreshDevices();
+}
+
+function loadConfig() {
+  const saved = localStorage.getItem('rf_config');
+  if (saved) {
+    CONFIG = JSON.parse(saved);
+    document.getElementById('projectId').value = CONFIG.projectId;
+    document.getElementById('apiKey').value = CONFIG.apiKey;
+    document.getElementById('parentUid').value = CONFIG.parentUid;
+    if (CONFIG.projectId && CONFIG.apiKey && CONFIG.parentUid) {
+      document.getElementById('pinCard').style.display = 'block';
+      document.getElementById('devicesCard').style.display = 'block';
+      document.getElementById('controlsCard').style.display = 'block';
+      refreshDevices();
+    }
+  }
+}
+
+// ── Firestore REST API ──
+function firestoreUrl(path) {
+  return `https://firestore.googleapis.com/v1/projects/${CONFIG.projectId}/databases/(default)/documents${path}`;
+}
+
+async function firestoreGet(path) {
+  const res = await fetch(firestoreUrl(path) + `?key=${CONFIG.apiKey}`);
+  return res.json();
+}
+
+async function firestorePatch(path, fields) {
+  const fieldPaths = Object.keys(fields).join('&updateMask.fieldPaths=');
+  const url = firestoreUrl(path) + `?key=${CONFIG.apiKey}&updateMask.fieldPaths=${fieldPaths}`;
+  const body = { fields: {} };
+  for (const [k, v] of Object.entries(fields)) {
+    if (typeof v === 'boolean') body.fields[k] = { booleanValue: v };
+    else if (typeof v === 'number') body.fields[k] = { integerValue: String(v) };
+    else body.fields[k] = { stringValue: String(v) };
+  }
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ── PIN Generation ──
+let pinExpireTimer = null;
+
+async function generatePin() {
+  if (!CONFIG.projectId) { alert('আগে config save করুন।'); return; }
+
+  const pin = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('pinDisplay').textContent = pin;
+
+  const expireAt = Date.now() + 10 * 60 * 1000; // 10 min
+
+  // Save PIN to Firestore
+  const path = `/pairing_codes/${pin}`;
+  const fields = {
+    parent_uid: CONFIG.parentUid,
+    expire_at: String(expireAt)
+  };
+  try {
+    await firestorePatch(path, fields);
+    startPinTimer(expireAt);
+  } catch(e) {
+    alert('Firestore error: ' + e.message + '\n\nAPI Key ও Project ID ঠিক আছে?');
+  }
+}
+
+function startPinTimer(expireAt) {
+  if (pinExpireTimer) clearInterval(pinExpireTimer);
+  pinExpireTimer = setInterval(() => {
+    const remaining = Math.max(0, Math.round((expireAt - Date.now()) / 1000));
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    document.getElementById('pinTimer').textContent =
+      remaining > 0 ? `⏱️ Code expires in ${m}:${s.toString().padStart(2,'0')}` : '❌ Code expired. Generate a new one.';
+    if (remaining === 0) {
+      clearInterval(pinExpireTimer);
+      document.getElementById('pinDisplay').textContent = '------';
+    }
+  }, 1000);
+}
+
+// ── Device List ──
+async function refreshDevices() {
+  if (!CONFIG.projectId || !CONFIG.parentUid) return;
+  const listDiv = document.getElementById('devicesList');
+  listDiv.innerHTML = '<div style="color:#aaa;font-size:13px;padding:10px;text-align:center;">Loading...</div>';
+
+  try {
+    // parent_commands collection এ parent_uid match করা devices খুঁজি
+    const url = `https://firestore.googleapis.com/v1/projects/${CONFIG.projectId}/databases/(default)/documents/parent_commands?key=${CONFIG.apiKey}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.documents || data.documents.length === 0) {
+      listDiv.innerHTML = '<div class="not-connected-msg">No devices connected yet.</div>';
+      return;
+    }
+
+    let html = '';
+    let found = 0;
+    for (const doc of data.documents) {
+      const f = doc.fields || {};
+      const pUid = f.parent_uid?.stringValue || '';
+      if (pUid !== CONFIG.parentUid) continue;
+      found++;
+
+      const devId = f.child_device_id?.stringValue || doc.name.split('/').pop();
+      const lockAll = f.lock_all_tabs?.booleanValue || false;
+      const adultBlk = f.force_adult_block?.booleanValue || false;
+
+      const shortId = devId.length > 20 ? devId.substring(0, 16) + '...' : devId;
+
+      if (!selectedDeviceId) selectedDeviceId = devId; // auto-select first
+
+      html += `
+        <div class="device-box" onclick="selectDevice('${devId}')" style="cursor:pointer;${selectedDeviceId===devId?'border:2px solid #00838f;':''}">
+          <div>
+            <div class="device-id">💻 ${shortId}</div>
+            <div class="device-status">
+              Lock: <b style="color:${lockAll?'#c62828':'#2e7d32'}">${lockAll?'ON':'OFF'}</b> |
+              Adult Block: <b style="color:${adultBlk?'#c62828':'#2e7d32'}">${adultBlk?'ON':'OFF'}</b>
+            </div>
+          </div>
+          <span class="status-badge badge-connected">Connected</span>
+        </div>`;
+    }
+
+    if (found === 0) {
+      listDiv.innerHTML = '<div class="not-connected-msg">No devices linked to your account yet.</div>';
+    } else {
+      listDiv.innerHTML = html;
+      syncToggleStates();
+    }
+  } catch(e) {
+    listDiv.innerHTML = `<div style="color:#c62828;font-size:13px;padding:10px;">Error: ${e.message}</div>`;
+  }
+}
+
+function selectDevice(devId) {
+  selectedDeviceId = devId;
+  refreshDevices();
+}
+
+async function syncToggleStates() {
+  if (!selectedDeviceId) return;
+  try {
+    const data = await firestoreGet(`/parent_commands/${selectedDeviceId}`);
+    const f = data.fields || {};
+    document.getElementById('toggle_lock').checked = f.lock_all_tabs?.booleanValue || false;
+    document.getElementById('toggle_adult').checked = f.force_adult_block?.booleanValue || false;
+    const tl = parseInt(f.time_limit_minutes?.integerValue || '0');
+    document.getElementById('toggle_time').checked = tl > 0;
+    if (tl > 0) {
+      document.getElementById('timeLimitInput').style.display = 'block';
+      document.getElementById('timeLimitMins').value = tl;
+    }
+  } catch(e) {}
+}
+
+// ── Send Commands ──
+async function sendCommand(field, value) {
+  if (!selectedDeviceId) {
+    showAlert('commandStatus', 'error', '⚠️ কোনো device select করা নেই।');
+    return;
+  }
+
+  const statusEl = document.getElementById('commandStatus');
+  statusEl.className = 'alert';
+  statusEl.style.display = 'block';
+  statusEl.style.background = '#fff3e0';
+  statusEl.style.color = '#e65100';
+  statusEl.textContent = '⏳ Sending command...';
+
+  try {
+    await firestorePatch(`/parent_commands/${selectedDeviceId}`, { [field]: value });
+    showAlert('commandStatus', 'success', `✅ "${field}" = ${value} → PC তে পাঠানো হয়েছে!`);
+    refreshDevices();
+  } catch(e) {
+    showAlert('commandStatus', 'error', '❌ Error: ' + e.message);
+  }
+}
+
+function toggleTimeLimit(enabled) {
+  document.getElementById('timeLimitInput').style.display = enabled ? 'block' : 'none';
+  if (!enabled) sendCommand('time_limit_minutes', 0);
+}
+
+async function applyTimeLimit() {
+  const mins = parseInt(document.getElementById('timeLimitMins').value);
+  if (!mins || mins < 1) { showAlert('commandStatus', 'error', 'Valid সময় দিন।'); return; }
+  await sendCommand('time_limit_minutes', mins);
+}
+
+// ── Helpers ──
+function showAlert(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = `alert alert-${type}`;
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ── Init ──
+loadConfig();
+</script>
+</body>
+</html>

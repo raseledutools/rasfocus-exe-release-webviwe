@@ -1,0 +1,14 @@
+// resources.rc
+#include "resource.h"
+
+// ১. আপনার আগের আইকন এবং অবজারভার
+IDI_APP_ICON ICON   "icon.ico"
+IDR_RASOBSERVE RCDATA "RasObserve.exe"
+
+// ২. ওয়ালপেপারগুলো
+IDR_WALLPAPER1 RCDATA "wallpapers\\1.jpg"
+IDR_WALLPAPER2 RCDATA "wallpapers\\2.jpg"
+
+// ৩. আপনার নতুন অ্যাডাল্ট সাইট লিস্ট
+IDR_ADULTSITES RCDATA "assets\\adultsites.txt"
+
