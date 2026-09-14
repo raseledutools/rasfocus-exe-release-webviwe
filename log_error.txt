@@ -1,6 +1,6 @@
 BUILD STATUS: SUCCESS
-Time: 2026-09-13 15:05:15 UTC
-Run: https://github.com/raseledutools/RasFocus-Exe-Release/actions/runs/34764456373
+Time: 2026-09-14 13:27:14 UTC
+Run: https://github.com/raseledutools/rasfocus-exe-release-webviwe/actions/runs/34849078104
 
 === Compiler Output ===
 Microsoft (R) C/C++ Optimizing Compiler Version 19.51.36256 for x64
@@ -39,7 +39,7 @@ tab_family_link.cpp(1529): note: see reference to function template instantiatio
             _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
             _Alloc=std::allocator<char>
         ]
-tab_family_link.cpp(1574): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'ProcessFamilyLinkMouseClick::<lambda_fa7bf1b6615a665c397b3bef5e8b20cb>::operator ()'
+tab_family_link.cpp(1574): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'ProcessFamilyLinkMouseClick::<lambda_234a05f3049323be6f432a2cf14626e5>::operator ()'
 C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\xstring(862): note: see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
         with
         [
@@ -65,7 +65,7 @@ tab_family_link.cpp(1560): note: see reference to function template instantiatio
             _Iter=std::_String_const_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
             _Alloc=std::allocator<char>
         ]
-tab_family_link.cpp(1560): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'ProcessFamilyLinkMouseClick::<lambda_fa7bf1b6615a665c397b3bef5e8b20cb>::operator ()'
+tab_family_link.cpp(1560): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'ProcessFamilyLinkMouseClick::<lambda_234a05f3049323be6f432a2cf14626e5>::operator ()'
 C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\xstring(862): note: see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<const wchar_t*,const wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
         with
         [
@@ -88,6 +88,7 @@ bookmarks.cpp
 context_menu.cpp
 downloads_panel.cpp
 find_in_page.cpp
+history_panel.cpp
 browser/advanced_feature.cpp(23): warning C4996: 'std::codecvt_utf8<wchar_t,1114111,(std::codecvt_mode)0>': warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning.
 C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\codecvt(34): note: see declaration of 'std::codecvt_utf8' (compiling source file browser/advanced_feature.cpp)
 browser/advanced_feature.cpp(23): warning C4996: 'std::codecvt_utf8<wchar_t,1114111,(std::codecvt_mode)0>::codecvt_utf8': warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning.
@@ -101,7 +102,6 @@ browser/advanced_feature.cpp(23): note: see reference to function template insta
         [
             _Facet=std::codecvt_utf8<wchar_t,1114111,(std::codecvt_mode)0>
         ]
-history_panel.cpp
 settings.cpp
 keyboard_shortcuts.cpp
 browser_profiles.cpp
@@ -153,7 +153,7 @@ browser/mini_browser.cpp(90): note: see reference to function template instantia
             _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
             _Alloc=std::allocator<char>
         ]
-browser/mini_browser.cpp(90): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'LoadProfilePhotoAsync::<lambda_6935ca227487712a799cebe9e7628b61>::operator ()'
+browser/mini_browser.cpp(90): note: see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'LoadProfilePhotoAsync::<lambda_12c49a96ba7d90711eb3efb511b7e77c>::operator ()'
 C:\Program Files\Microsoft Visual Studio\18\Enterprise\VC\Tools\MSVC\14.51.36231\include\xstring(862): note: see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
         with
         [
@@ -360,9 +360,9 @@ secur32.lib
 bcrypt.lib 
 dbghelp.lib 
 ./packages/Microsoft.Web.WebView2.1.0.2420.47/build/native/x64/WebView2LoaderStatic.lib 
-D:\a\RasFocus-Exe-Release\RasFocus-Exe-Release\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_app.lib 
-D:\a\RasFocus-Exe-Release\RasFocus-Exe-Release\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_firestore.lib 
-D:\a\RasFocus-Exe-Release\RasFocus-Exe-Release\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_auth.lib 
+D:\a\rasfocus-exe-release-webviwe\rasfocus-exe-release-webviwe\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_app.lib 
+D:\a\rasfocus-exe-release-webviwe\rasfocus-exe-release-webviwe\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_firestore.lib 
+D:\a\rasfocus-exe-release-webviwe\rasfocus-exe-release-webviwe\firebase_cpp_sdk\libs\windows\VS2019\MT\x64\Release\firebase_auth.lib 
 main.obj 
 prewindow.obj 
 tab_dashboard.obj 
