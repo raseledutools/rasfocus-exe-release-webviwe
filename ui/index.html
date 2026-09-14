@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RasFocus</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="ri-focus-3-line"></i>
+                    <span>RasFocus</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="blocks">
+                    <i class="ri-shield-keyhole-line"></i>
+                    <span>Blocks</span>
+                </button>
+                <button class="nav-item" data-tab="deep-study">
+                    <i class="ri-book-open-line"></i>
+                    <span>Deep Study</span>
+                </button>
+                <button class="nav-item" data-tab="special">
+                    <i class="ri-star-line"></i>
+                    <span>Special</span>
+                </button>
+                <button class="nav-item" data-tab="statistics">
+                    <i class="ri-bar-chart-box-line"></i>
+                    <span>Statistics</span>
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <i class="ri-settings-3-line"></i>
+                    <span>Settings</span>
+                </button>
+                <button class="nav-item" data-tab="family-link">
+                    <i class="ri-parent-line"></i>
+                    <span>Family Link</span>
+                </button>
+                <button class="nav-item" data-tab="rasbrowser">
+                    <i class="ri-global-line"></i>
+                    <span>RasBrowser</span>
+                </button>
+                <button class="nav-item" data-tab="pdf-tools">
+                    <i class="ri-file-pdf-line"></i>
+                    <span>PDF Tools</span>
+                </button>
+                <button class="nav-item" data-tab="phone-remote">
+                    <i class="ri-smartphone-line"></i>
+                    <span>Phone Remote</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="upgrade-btn">
+                    <i class="ri-vip-crown-line"></i>
+                    <span>Upgrade to Premium</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="window-controls">
+                    <!-- Placeholder for custom window controls -->
+                </div>
+                <div class="user-profile">
+                    <span id="user-greeting">Welcome back, User</span>
+                    <div class="avatar">
+                        <i class="ri-user-line"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Contents -->
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <section id="tab-dashboard" class="tab-content active">
+                    <div class="glass-card welcome-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h1>Dashboard</h1>
+                                <p>Welcome to RasFocus. Stay productive and manage your time efficiently.</p>
+                            </div>
+                            <button class="btn-kill" onclick="invokeRust('kill_debug_apps')">
+                                <i class="ri-bug-line"></i> Kill Taskmgr/Debuggers
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Cards -->
+                    <div class="action-cards-grid mb-4">
+                        <div class="action-card">
+                            <i class="ri-time-line icon-large"></i>
+                            <h3>Create Blocking Profile</h3>
+                            <p>Set up Schedule, Simple & Emergency blocks</p>
+                        </div>
+                        <div class="action-card adult-block">
+                            <i class="ri-shield-user-line icon-large"></i>
+                            <h3>Advanced Adult Block</h3>
+                            <p>Block adult sites & filter content</p>
+                        </div>
+                        <div class="action-card deep-study">
+                            <i class="ri-book-open-line icon-large"></i>
+                            <h3>Start Deep Study</h3>
+                            <p>Launch a Pomodoro focus session now</p>
+                        </div>
+                        <div class="action-card">
+                            <i class="ri-checkbox-circle-line icon-large"></i>
+                            <h3>Allow Only Websites</h3>
+                            <p>Whitelist specific sites and applications</p>
+                        </div>
+                    </div>
+
+                    <!-- Grid Sections -->
+                    <div class="dashboard-sections">
+                        <!-- Quick Blocks -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title">Quick Blocks</h2>
+                            <div class="btn-grid">
+                                <button class="dash-btn"><i class="ri-cup-line"></i><span>Rest Button</span></button>
+                                <button class="dash-btn"><i class="ri-wifi-off-line"></i><span>Internet Block</span></button>
+                                <button class="dash-btn"><i class="ri-uninstall-line"></i><span>Uninstall Block</span></button>
+                                <button class="dash-btn"><i class="ri-spam-2-line"></i><span>Ads Block</span></button>
+                                <button class="dash-btn"><i class="ri-video-chat-line"></i><span>YT Shorts Block</span></button>
+                                <button class="dash-btn"><i class="ri-instagram-line"></i><span>FB Reels Block</span></button>
+                            </div>
+                        </div>
+
+                        <!-- Web & Cloud Workspace -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title">Web & Cloud Workspace</h2>
+                            <div class="btn-grid">
+                                <button class="dash-btn"><i class="ri-global-line"></i><span>RasBrowser</span></button>
+                                <button class="dash-btn"><i class="ri-robot-line"></i><span>Gemini</span></button>
+                                <button class="dash-btn"><i class="ri-robot-line"></i><span>ChatGPT</span></button>
+                                <button class="dash-btn"><i class="ri-youtube-line"></i><span>YouTube</span></button>
+                                <button class="dash-btn"><i class="ri-facebook-circle-line"></i><span>Facebook</span></button>
+                                <button class="dash-btn"><i class="ri-google-fill"></i><span>Google Docs</span></button>
+                            </div>
+                        </div>
+
+                        <!-- Pro Tools & Personal -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title">Pro Tools & Student Corner</h2>
+                            <div class="btn-grid">
+                                <button class="dash-btn"><i class="ri-file-pdf-line"></i><span>PDF Reader</span></button>
+                                <button class="dash-btn"><i class="ri-image-line"></i><span>Image to PDF</span></button>
+                                <button class="dash-btn"><i class="ri-calculator-line"></i><span>Scientific Calc</span></button>
+                                <button class="dash-btn"><i class="ri-book-read-line"></i><span>Personal Diary</span></button>
+                                <button class="dash-btn"><i class="ri-graduation-cap-line"></i><span>Study Materials</span></button>
+                                <button class="dash-btn"><i class="ri-percent-line"></i><span>CGPA Calc</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Blocks Tab -->
+                <section id="tab-blocks" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Content Blocks</h2>
+                                <p>Manage your schedules, emergency blocks, and specific app limitations.</p>
+                            </div>
+                            <button class="btn-primary" onclick="invokeRust('toggle_adult_filter')">
+                                <i class="ri-shield-check-line"></i> Master Toggle
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <!-- Emergency Blocks -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Emergency Blocks</h2>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Internet Lock</h4>
+                                    <p>Disables all incoming and outgoing network traffic.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" onchange="invokeRust('toggle_internet', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>App Installation Block</h4>
+                                    <p>Prevents installation or uninstallation of software.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" onchange="invokeRust('toggle_install', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Scheduled Profiles -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Scheduled Profiles</h2>
+                            <p class="mb-4 text-secondary">Active blocking profiles according to your routine.</p>
+                            
+                            <div class="profile-card active-profile">
+                                <div class="profile-header">
+                                    <h4>Study Time</h4>
+                                    <span class="badge active">Running</span>
+                                </div>
+                                <p>06:00 PM - 09:00 PM</p>
+                                <p class="text-secondary small">Blocks: YouTube, Facebook, Steam</p>
+                            </div>
+
+                            <div class="profile-card">
+                                <div class="profile-header">
+                                    <h4>Bed Time</h4>
+                                    <span class="badge">Scheduled</span>
+                                </div>
+                                <p>11:00 PM - 06:00 AM</p>
+                                <p class="text-secondary small">Blocks: All Apps & Internet</p>
+                            </div>
+
+                            <button class="btn-outline mt-4 w-100">
+                                <i class="ri-add-line"></i> Create New Profile
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other Tabs (Placeholders for now) -->
+                <!-- Deep Study Tab -->
+                <section id="tab-deep-study" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Deep Study Mode</h2>
+                                <p>Launch a strict Pomodoro focus session with background ambient noise.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-sections">
+                        <!-- Pomodoro Settings -->
+                        <div class="dash-section glass-card" id="ds-timer-section">
+                            <h2 class="section-title text-accent">Pomodoro Timer</h2>
+                            <div class="timer-settings mb-4" id="ds-inputs">
+                                <div class="timer-input">
+                                    <label>Focus (min)</label>
+                                    <input type="number" id="ds-focus" value="25" min="1">
+                                </div>
+                                <div class="timer-input">
+                                    <label>Break (min)</label>
+                                    <input type="number" id="ds-break" value="5" min="1">
+                                </div>
+                                <div class="timer-input">
+                                    <label>Sessions</label>
+                                    <input type="number" id="ds-sessions" value="4" min="1">
+                                </div>
+                            </div>
+                            
+                            <div id="ds-display" style="display: none; text-align: center; margin: 2rem 0;">
+                                <h1 id="ds-time" style="font-size: 4rem; letter-spacing: 4px; color: var(--accent-primary);">25:00</h1>
+                                <p id="ds-status" class="text-secondary">Focus Session 1/4</p>
+                            </div>
+
+                            <button id="ds-start-btn" class="btn-primary w-100" style="font-size: 1.2rem; padding: 1rem;" onclick="startDeepStudy()">
+                                <i class="ri-play-circle-line"></i> <span id="ds-btn-text">Start Deep Study</span>
+                            </button>
+                        </div>
+
+                        <!-- Audio & Strictness -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Ambient Noise & Strictness</h2>
+                            
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Play Ambient Noise</h4>
+                                    <select class="form-select mt-2">
+                                        <option>White Noise</option>
+                                        <option selected>Classic Brown Noise</option>
+                                        <option>Deep Focus</option>
+                                        <option>Heavy Rain</option>
+                                        <option>Space Drone</option>
+                                    </select>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" onchange="invokeRust('toggle_audio', this.checked)">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Strict Mode (No Exit)</h4>
+                                    <p>Prevents closing the app during a session.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Special Features Tab -->
+                <section id="tab-special" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Special Features</h2>
+                                <p>Access advanced tools and external integrations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Power User Tools</h2>
+                            <div class="btn-grid">
+                                <button class="dash-btn"><i class="ri-terminal-window-line"></i><span>Advanced Block</span></button>
+                                <button class="dash-btn"><i class="ri-history-line"></i><span>Diary / Logs</span></button>
+                                <button class="dash-btn"><i class="ri-bug-line"></i><span>Debug Panel</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Statistics Tab -->
+                <section id="tab-statistics" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Weekly Analytics</h2>
+                                <p>View your productivity trends and time wasters.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Top Time-Wasters</h2>
+                            
+                            <div class="stat-row">
+                                <div class="stat-info"><span>YouTube</span><span class="text-secondary small">8h 45m</span></div>
+                                <div class="progress-bg"><div class="progress-bar" style="width: 85%; background: #ff4d4d;"></div></div>
+                            </div>
+                            
+                            <div class="stat-row">
+                                <div class="stat-info"><span>Facebook</span><span class="text-secondary small">5h 20m</span></div>
+                                <div class="progress-bg"><div class="progress-bar" style="width: 55%; background: #3b82f6;"></div></div>
+                            </div>
+
+                            <div class="stat-row">
+                                <div class="stat-info"><span>Instagram</span><span class="text-secondary small">3h 15m</span></div>
+                                <div class="progress-bg"><div class="progress-bar" style="width: 35%; background: #d946ef;"></div></div>
+                            </div>
+                        </div>
+
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Focus Rhythm</h2>
+                            <p class="text-secondary mb-4">You were most productive on Thursday.</p>
+                            
+                            <div class="rhythm-chart">
+                                <div class="rhythm-bar"><div class="fill" style="height: 45%;"></div><span>Mon</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 62%;"></div><span>Tue</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 50%;"></div><span>Wed</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 75%;"></div><span>Thu</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 68%;"></div><span>Fri</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 20%;"></div><span>Sat</span></div>
+                                <div class="rhythm-bar"><div class="fill" style="height: 35%;"></div><span>Sun</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Tab -->
+                <section id="tab-settings" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Settings</h2>
+                                <p>Configure RasFocus preferences and security.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">System & Security</h2>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Require Password</h4>
+                                    <p>Ask for PIN to close or modify settings.</p>
+                                </div>
+                                <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+                            </div>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Block Task Manager</h4>
+                                    <p>Prevent closing RasFocus via Task Manager.</p>
+                                </div>
+                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                            </div>
+                        </div>
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">General</h2>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Start with Windows</h4>
+                                    <p>Launch RasFocus automatically on boot.</p>
+                                </div>
+                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                            </div>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Dark Theme</h4>
+                                    <p>Force dark mode across all interfaces.</p>
+                                </div>
+                                <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RasBrowser Tab -->
+                <section id="tab-rasbrowser" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>RasBrowser</h2>
+                                <p>Safe and focused browsing experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card" style="text-align: center; padding: 3rem;">
+                            <i class="ri-earth-line icon-large" style="font-size: 4rem;"></i>
+                            <h3 class="mt-4">RasBrowser Engine</h3>
+                            <p class="text-secondary mt-2 mb-4">Launch the integrated secure browser powered by Tauri.</p>
+                            <button class="btn-primary"><i class="ri-window-line"></i> Open Browser</button>
+                        </div>
+                    </div>
+                </section>
+                <!-- Family Link Tab -->
+                <section id="tab-family-link" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Family Link</h2>
+                                <p>Connect this device to a Parent account for remote monitoring and controls.</p>
+                            </div>
+                            <button class="btn-outline">
+                                <i class="ri-links-line"></i> View Portal
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card" style="max-width: 500px; margin: 0 auto;">
+                            <h2 class="section-title text-accent text-center">Connect to Parent</h2>
+                            
+                            <div class="form-group mb-4">
+                                <label>Parent Email (Gmail)</label>
+                                <input type="email" class="form-input" placeholder="parent@gmail.com">
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <label>6-Digit PIN Code</label>
+                                <input type="text" class="form-input text-center" style="font-size: 1.5rem; letter-spacing: 0.5rem;" placeholder="------" maxlength="6">
+                            </div>
+
+                            <button class="btn-primary w-100" onclick="invokeRust('connect_parent')">
+                                <i class="ri-link"></i> Link Device
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <section id="tab-rasbrowser" class="tab-content"><div class="glass-card"><h2>RasBrowser</h2><p>Safe and focused browsing experience.</p></div></section>
+                <!-- PDF Tools Tab -->
+                <section id="tab-pdf-tools" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>PDF & Document Tools</h2>
+                                <p>Manage, read, and manipulate your study materials.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Quick Actions</h2>
+                            <div class="btn-grid">
+                                <button class="dash-btn" onclick="invokeRust('open_pdf_reader')"><i class="ri-book-read-line"></i><span>Read PDF</span></button>
+                                <button class="dash-btn"><i class="ri-file-add-line"></i><span>Merge PDF</span></button>
+                                <button class="dash-btn"><i class="ri-split-cells-horizontal"></i><span>Split PDF</span></button>
+                                <button class="dash-btn"><i class="ri-image-add-line"></i><span>Image to PDF</span></button>
+                                <button class="dash-btn"><i class="ri-file-image-line"></i><span>PDF to Image</span></button>
+                                <button class="dash-btn"><i class="ri-file-zip-line"></i><span>Compress PDF</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Phone Remote Tab -->
+                <section id="tab-phone-remote" class="tab-content">
+                    <div class="glass-card mb-4">
+                        <div class="welcome-header">
+                            <div>
+                                <h2>Phone Remote Control</h2>
+                                <p>Connect and control this PC from your smartphone or another device.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <!-- Your Device Info -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Your Desktop</h2>
+                            <p class="mb-4 text-secondary">Share these credentials to allow remote connection.</p>
+                            
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>Device ID</h4>
+                                    <p style="font-size: 1.5rem; color: var(--text-primary); letter-spacing: 2px;">924 105 382</p>
+                                </div>
+                            </div>
+                            <div class="block-item">
+                                <div class="block-info">
+                                    <h4>One-Time Password</h4>
+                                    <p style="font-size: 1.5rem; color: var(--text-primary); letter-spacing: 2px;">k9m2pX</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Connect to Remote -->
+                        <div class="dash-section glass-card">
+                            <h2 class="section-title text-accent">Control Remote Device</h2>
+                            <p class="mb-4 text-secondary">Enter the remote ID you wish to connect to.</p>
+                            
+                            <div class="form-group mb-4">
+                                <label>Remote ID</label>
+                                <input type="text" class="form-input" placeholder="e.g., 924 105 382" style="font-size: 1.25rem;">
+                            </div>
+                            
+                            <button class="btn-primary w-100" onclick="invokeRust('connect_remote')">
+                                <i class="ri-cast-line"></i> Connect
+                            </button>
+                            
+                            <h4 class="mt-4 mb-2 text-secondary">Recent Connections</h4>
+                            <div class="profile-card" style="padding: 1rem;">
+                                <div class="profile-header">
+                                    <h4 style="font-size: 1rem;"><i class="ri-smartphone-line"></i> My Android Phone</h4>
+                                </div>
+                                <p class="text-secondary small">ID: 881 203 114</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tauri API -->
+    <script>
+        const { invoke } = window.__TAURI__.tauri;
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
