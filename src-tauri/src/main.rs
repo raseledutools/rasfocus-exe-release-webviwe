@@ -38,7 +38,7 @@ fn kill_debug_apps() {
     ];
 
     for (pid, process) in sys.processes() {
-        let lower_name = process.name().to_string_lossy().to_lowercase();
+        let lower_name = process.name().to_lowercase();
         for app in debug_apps.iter() {
             if lower_name == *app {
                 println!("Killing {} with PID {:?}", lower_name, pid);
