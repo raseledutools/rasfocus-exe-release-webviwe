@@ -158,16 +158,16 @@ function tickDeepStudy() {
 function updateDsDisplay() {
     const m = Math.floor(dsTimeLeft / 60).toString().padStart(2, '0');
     const s = (dsTimeLeft % 60).toString().padStart(2, '0');
-    document.getElementById('ds-time').innerText = ${m}:;
+    document.getElementById('ds-time').innerText = `${m}:${s}`;
     
     const statusEl = document.getElementById('ds-status');
     const timeEl = document.getElementById('ds-time');
     
     if (dsIsFocus) {
-        statusEl.innerText = Focus Session /;
+        statusEl.innerText = `Focus Session ${dsCurrentSession}/${dsTotalSessions}`;
         timeEl.style.color = 'var(--accent-primary)';
     } else {
-        statusEl.innerText = Break Time!;
+        statusEl.innerText = `Break Time!`;
         timeEl.style.color = 'var(--accent-secondary)';
     }
 }
