@@ -1,5 +1,7 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use serde::{Deserialize, Serialize};
-use sysinfo::{System, Process};
+use sysinfo::System;
 use std::process::Command;
 use winreg::enums::*;
 use winreg::RegKey;
@@ -28,19 +30,18 @@ fn kill_debug_apps() {
     println!("Killing taskmgr and debug apps...");
     let mut sys = System::new_all();
     sys.refresh_all();
-    
+
     let debug_apps = [
         "taskmgr.exe", "resmon.exe", "perfmon.exe",
         "procexp.exe", "procexp64.exe", "procmon.exe",
-        "processhacker.exe", "wireshark.exe", "fiddler.exe"
+        "processhacker.exe", "wireshark.exe", "fiddler.exe",
     ];
 
     for (pid, process) in sys.processes() {
-        let name = process.name();
-        let lower_name = name.to_lowercase();
+        let lower_name = process.name().to_string_lossy().to_lowercase();
         for app in debug_apps.iter() {
             if lower_name == *app {
-                println!("Killing {} with PID {}", name, pid);
+                println!("Killing {} with PID {:?}", lower_name, pid);
                 process.kill();
             }
         }
@@ -51,14 +52,12 @@ fn kill_debug_apps() {
 fn toggle_internet(enable: bool) {
     println!("Internet block set to: {}", enable);
     if enable {
-        // Block all outbound traffic
         let _ = Command::new("netsh")
-            .args(&["advfirewall", "set", "allprofiles", "firewallpolicy", "blockin,blockout"])
+            .args(["advfirewall", "set", "allprofiles", "firewallpolicy", "blockin,blockout"])
             .status();
     } else {
-        // Restore default (allow outbound)
         let _ = Command::new("netsh")
-            .args(&["advfirewall", "set", "allprofiles", "firewallpolicy", "blockin,allowout"])
+            .args(["advfirewall", "set", "allprofiles", "firewallpolicy", "blockin,allowout"])
             .status();
     }
 }
@@ -68,7 +67,7 @@ fn toggle_install(enable: bool) {
     println!("Install block set to: {}", enable);
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     let path = "Software\\Policies\\Microsoft\\Windows\\Installer";
-    
+
     if enable {
         if let Ok((key, _)) = hkcu.create_subkey(path) {
             let _ = key.set_value("DisableMSI", &2u32);
@@ -93,26 +92,20 @@ fn toggle_audio(enable: bool) {
 #[tauri::command]
 async fn connect_parent() -> Result<String, String> {
     println!("Initiating connection to parent via Firebase...");
-    // A stub for Reqwest Firebase GET request
-    // let url = "https://rasfocus-c746d.firebaseio.com/users.json";
-    // let res = reqwest::get(url).await.map_err(|e| e.to_string())?;
-    // Ok(res.text().await.map_err(|e| e.to_string())?)
     Ok("Connected successfully (Mock)".to_string())
 }
 
 #[tauri::command]
 fn open_pdf_reader() {
     println!("Opening PDF reader application...");
-    // Open system default PDF reader or edge
     let _ = Command::new("cmd")
-        .args(&["/C", "start", "msedge"])
+        .args(["/C", "start", "msedge"])
         .spawn();
 }
 
 #[tauri::command]
 fn connect_remote() {
     println!("Connecting to remote device...");
-    // TODO: Start screen streaming websocket connection
 }
 
 fn main() {
